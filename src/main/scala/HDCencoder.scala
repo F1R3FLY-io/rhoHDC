@@ -6,7 +6,20 @@ import scala.collection.mutable.HashMap
 import HVAlgebra._
 import HDCSymbolTable._
 
-object VEncoder extends Shredder 
+trait HVEncoder[V[_],Q] {
+  def encode(vfqn: FQN[ShredValue], prm: V[Q])(salt: V[Q]): V[Q]
+  def encode(hmap: HashMap[FQN[ShredValue], ShredValue], prm: V[Q])(salt: V[Q]): V[Q]
+  def encode(name: Name[RGrnd, RTerm], prm: V[Q], acc: V[Q])(
+      salt: V[Q]
+  ): V[Q]
+  def encode(term: RTerm, prm: V[Q], acc: V[Q])(
+      salt: V[Q]
+  ): V[Q]
+  def encode(term: RTerm)(salt: V[Q]): V[Q]
+}
+
+object VEncoder extends HVEncoder[SparseVector,Boolean]
+    with Shredder
 {
   override def getLabel(term: RTerm): ShredValue = {
     HVValue( getSymbol(term) )
