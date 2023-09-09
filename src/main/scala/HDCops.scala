@@ -4,9 +4,12 @@ import breeze.linalg.{DenseVector, SparseVector}
 import breeze.stats.distributions._
 import breeze.stats.distributions.Rand.FixedSeed.randBasis
 
-trait HVT[V[_],Q] {
-  def zero() : V[Q]
+trait HVRT [V[_],Q] {
   def rand(): V[Q]
+}
+
+trait HVT[V[_],Q] extends HVRT[V,Q] {
+  def zero() : V[Q]  
   def xOr(v1: V[Q], v2: V[Q]): V[Q]
   def perm(v1: V[Q], v2: V[Q]): V[Q]
   def maj(summands: List[V[Q]]): V[Q]
