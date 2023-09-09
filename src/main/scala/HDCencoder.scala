@@ -3,7 +3,7 @@ package io.f1r3fly.metta2rho.tinyrho
 import breeze.linalg.{DenseVector, SparseVector}
 import scala.collection.mutable.HashMap
 
-import HVAlgebra._
+//import HVAlgebra._
 import HDCSymbolTable._
 
 trait HVEncoder[V[_],Q] {
@@ -18,8 +18,26 @@ trait HVEncoder[V[_],Q] {
   def encode(term: RTerm)(salt: V[Q]): V[Q]
 }
 
+// trait GHVEncoder[V[_],Q] extends HVEncoder[V,Q] with HVT[V,Q] {
+//   override def encode(name: Name[RGrnd, RTerm], prm: V[Q], acc: V[Q])(
+//       salt: V[Q]
+//   ): V[Q] = {    
+//     name match {
+//       case RQ( t ) => {
+//         val (rcrdTagV, tagV, termFldV, tV) =
+//           (getSymbol(RString("RTerm")),
+//             perm(prm, getSymbol(name)),
+//             perm(prm, getSymbol(RString("term"))),
+//             encode(t, prm, acc)( salt ))
+//         maj(List[V[Q]](xOr(rcrdTagV, tagV), xOr(termFldV, tV)))
+//       }
+//       case _ => ???
+//     }
+//   }
+// }
+
 object VEncoder extends HVEncoder[SparseVector,Boolean]
-    with Shredder
+    with Shredder with HVAlgebraT
 {
   override def getLabel(term: RTerm): ShredValue = {
     HVValue( getSymbol(term) )

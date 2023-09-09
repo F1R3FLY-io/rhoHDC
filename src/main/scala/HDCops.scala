@@ -12,21 +12,24 @@ trait HVT[V[_],Q] {
   def maj(summands: List[V[Q]]): V[Q]
 }
 
-object HVAlgebra extends HVT[SparseVector, Boolean] {
+trait HVAlgebraT extends HVT[SparseVector,Boolean] {
   val defaultDimension : Int = 4072
   val Bernie = Bernoulli.distribution(0.5)
   val Uni = Uniform(0,defaultDimension-1)
-  def zero() : SparseVector[Boolean] = SparseVector.zeros[Boolean]( defaultDimension )
-  def rand(): SparseVector[Boolean]  = {
+  
+  override def zero() : SparseVector[Boolean] = SparseVector.zeros[Boolean]( defaultDimension )
+  override def rand(): SparseVector[Boolean]  = {
     val size = Uni.sample().toInt
     val vVals = Bernie.samples.take(size)
     SparseVector[Boolean](vVals.toArray)
   }
-  def xOr(v1: SparseVector[Boolean], v2: SparseVector[Boolean]): SparseVector[Boolean]  = ??? //v1.:^^( v2 )
-  def perm(v1: SparseVector[Boolean], v2: SparseVector[Boolean]): SparseVector[Boolean] = ??? //v2.permute(v1.toDenseVector)
-  def maj(summands: List[SparseVector[Boolean]]): SparseVector[Boolean] =
+  override def xOr(v1: SparseVector[Boolean], v2: SparseVector[Boolean]): SparseVector[Boolean]  = ??? //v1.:^^( v2 )
+  override def perm(v1: SparseVector[Boolean], v2: SparseVector[Boolean]): SparseVector[Boolean] = ??? //v2.permute(v1.toDenseVector)
+  override def maj(summands: List[SparseVector[Boolean]]): SparseVector[Boolean] =
     ??? //summands.reduce((a, b) => a + b).mapValues(_ >= (vectors.size / 2))
 }
+
+object HVAlgebra extends HVAlgebraT {}
 
 trait HVExpr[V]
 case class HVXor[V](l: HVExpr[V], r: HVExpr[V])
@@ -36,7 +39,7 @@ case class HVPerm[V](perm: HVExpr[V], hvec: HVExpr[V])
 case class HVMaj[V](summands: List[HVExpr[V]])
     extends HVExpr[V]
 
-object HVTermAlgebra extends HVT[HVExpr,Boolean] {
+trait HVTermAlgebraT extends HVT[HVExpr,Boolean] {
   case object HV0 extends HVExpr[Boolean]
   case object HV1 extends HVExpr[Boolean]
   case object HVRand extends HVExpr[Boolean]
@@ -54,3 +57,5 @@ object HVTermAlgebra extends HVT[HVExpr,Boolean] {
     HVMaj[Boolean]( summands )
   }
 }
+
+object HVTermAlgebra extends HVTermAlgebraT {}
