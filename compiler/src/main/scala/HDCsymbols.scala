@@ -3,11 +3,11 @@ package io.f1r3fly.metta2rho.tinyrho
 import breeze.linalg.{DenseVector, SparseVector}
 import scala.collection.mutable.HashMap
 
-import HVAlgebra._
+//import HVAlgebra._
 
-trait HVSymbolTable {
-  def symbolMap: HashMap[RTerm, SparseVector[Boolean]]
-  def getSymbol(name: Name[RGrnd, RTerm]): SparseVector[Boolean] = {
+trait HVSymbolTableT[V[_],Q] extends HVRT[V,Q] {
+  def symbolMap: HashMap[RTerm, V[Q]]
+  def getSymbol(name: Name[RGrnd, RTerm]): V[Q] = {
     name match {
       case _ : RQ => {
         symbolMap.get(RString("RQ")) match {
@@ -22,7 +22,7 @@ trait HVSymbolTable {
       case _ => ???
     }
   }
-  def getSymbol(term: RTerm): SparseVector[Boolean] = {
+  def getSymbol(term: RTerm): V[Q] = {
     term match {
       case RZ => {
         symbolMap.get(RZ) match {
@@ -419,6 +419,8 @@ trait HVSymbolTable {
   }
 }
 
-object HDCSymbolTable extends HVSymbolTable {  
+trait HVSymbolTable extends HVSymbolTableT[SparseVector,Boolean] 
+
+object HDCSymbolTable extends HVSymbolTable with HVAlgebraT {
   override val symbolMap: HashMap[RTerm, SparseVector[Boolean]] = new HashMap[RTerm, SparseVector[Boolean]]()
 }

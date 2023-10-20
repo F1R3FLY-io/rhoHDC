@@ -4,7 +4,7 @@ import breeze.linalg.{DenseVector, SparseVector}
 import scala.collection.mutable.HashMap
 
 //import HVAlgebra._
-import HDCSymbolTable._
+//import HDCSymbolTable._
 
 trait HVEncoder[V[_],Q] extends HVT[V,Q] {
   def encode(vfqn: FQN[ShredValue], prm: V[Q])(salt: V[Q]): V[Q]
@@ -18,15 +18,28 @@ trait HVEncoder[V[_],Q] extends HVT[V,Q] {
   def encode(term: RTerm)(salt: V[Q]): V[Q]
 }
 
-object VEncoder extends HVEncoder[SparseVector,Boolean]
-    with Shredder
-{
-  override def zero() : SparseVector[Boolean] = HVAlgebra.zero()
-  override def rand() : SparseVector[Boolean] = HVAlgebra.rand()
-  override def xOr(v1: SparseVector[Boolean], v2: SparseVector[Boolean]) : SparseVector[Boolean] = HVAlgebra.xOr( v1, v2 )
-  override def perm(v1: SparseVector[Boolean], v2: SparseVector[Boolean]): SparseVector[Boolean] = HVAlgebra.perm( v1, v2 )
-  def maj(summands: List[SparseVector[Boolean]]): SparseVector[Boolean] = HVAlgebra.maj( summands )
+trait GHVEncoder[V[_],Q] extends HVEncoder[V,Q] with HVT[V,Q] with HVSymbolTableT[V,Q] {
+  override def encode(name: Name[RGrnd, RTerm], prm: V[Q], acc: V[Q])(
+      salt: V[Q]
+  ): V[Q] = {    
+    name match {
+      case RQ( t ) => {
+        val (rcrdTagV, tagV, termFldV, tV) =
+          (getSymbol(RString("RTerm")),
+            perm(prm, getSymbol(name)),
+            perm(prm, getSymbol(RString("term"))),
+            encode(t, prm, acc)( salt ))
+        maj(List[V[Q]](xOr(rcrdTagV, tagV), xOr(termFldV, tV)))
+      }
+      case _ => ???
+    }
+  }
+}
 
+object VEncoder extends HVEncoder[SparseVector,Boolean]
+    with Shredder with HVAlgebraT
+{
+  import HDCSymbolTable._
   override def getLabel(term: RTerm): ShredValue = {
     HVValue( getSymbol(term) )
   }
