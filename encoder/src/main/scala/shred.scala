@@ -1,4 +1,4 @@
-package io.f1r3fly.metta2rho.tinyrho
+package io.f1r3fly.rhohdc.tinyrho
 
 import breeze.linalg.{DenseVector, SparseVector}
 import scala.collection.mutable.HashMap

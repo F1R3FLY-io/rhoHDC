@@ -20,14 +20,14 @@ lazy val hdc = (project in file("hdc"))
       "-Xfatal-warnings"
     ),
     /* Publishing Settings */
-    scmInfo := Some(
-      ScmInfo(url("https://github.com/F1R3FLY-io/rhoHDC"), "git@github.com:F1R3FLY-io/rhoHDC.git")
-    ),
-    //git.remoteRepo := scmInfo.value.get.connection,
-    publishMavenStyle := true,
-    publishTo := Some("GitHub Package Registry" at "https://maven.pkg.github.com/leithaus/SNETPackages"),
-    credentials += Credentials(Path.userHome / ".sbt" / "1.0" / ".githubcredentials"),
-    Test/publishArtifact := false,
+    // scmInfo := Some(
+    //   ScmInfo(url("https://github.com/F1R3FLY-io/rhoHDC"), "git@github.com:F1R3FLY-io/rhoHDC.git")
+    // ),
+    // //git.remoteRepo := scmInfo.value.get.connection,
+    // publishMavenStyle := true,
+    // publishTo := Some("GitHub Package Registry" at "https://maven.pkg.github.com/leithaus/SNETPackages"),
+    // credentials += Credentials(Path.userHome / ".sbt" / "1.0" / ".githubcredentials"),
+    // Test/publishArtifact := false,
     licenses := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
     homepage := Some(url("https://www.f1r3fly.io")),
     libraryDependencies ++= commonDependencies,
@@ -45,14 +45,14 @@ lazy val tinyrho = (project in file("tinyrho"))
       "-Xfatal-warnings"
     ),
     /* Publishing Settings */
-    scmInfo := Some(
-      ScmInfo(url("https://github.com/F1R3FLY-io/rhoHDC"), "git@github.com:F1R3FLY-io/rhoHDC.git")
-    ),
-    //git.remoteRepo := scmInfo.value.get.connection,
-    publishMavenStyle := true,
-    publishTo := Some("GitHub Package Registry" at "https://maven.pkg.github.com/leithaus/SNETPackages"),
-    credentials += Credentials(Path.userHome / ".sbt" / "1.0" / ".githubcredentials"),
-    Test/publishArtifact := false,
+    // scmInfo := Some(
+    //   ScmInfo(url("https://github.com/F1R3FLY-io/rhoHDC"), "git@github.com:F1R3FLY-io/rhoHDC.git")
+    // ),
+    // //git.remoteRepo := scmInfo.value.get.connection,
+    // publishMavenStyle := true,
+    // publishTo := Some("GitHub Package Registry" at "https://maven.pkg.github.com/leithaus/SNETPackages"),
+    // credentials += Credentials(Path.userHome / ".sbt" / "1.0" / ".githubcredentials"),
+    // Test/publishArtifact := false,
     licenses := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
     homepage := Some(url("https://www.f1r3fly.io")),
     libraryDependencies ++= commonDependencies,
@@ -70,14 +70,14 @@ lazy val encoder = (project in file("encoder"))
       "-Xfatal-warnings"
     ),
     /* Publishing Settings */
-    scmInfo := Some(
-      ScmInfo(url("https://github.com/F1R3FLY-io/rhoHDC"), "git@github.com:F1R3FLY-io/rhoHDC.git")
-    ),
-    //git.remoteRepo := scmInfo.value.get.connection,
-    publishMavenStyle := true,
-    publishTo := Some("GitHub Package Registry" at "https://maven.pkg.github.com/leithaus/SNETPackages"),
-    credentials += Credentials(Path.userHome / ".sbt" / "1.0" / ".githubcredentials"),
-    Test/publishArtifact := false,
+    // scmInfo := Some(
+    //   ScmInfo(url("https://github.com/F1R3FLY-io/rhoHDC"), "git@github.com:F1R3FLY-io/rhoHDC.git")
+    // ),
+    // //git.remoteRepo := scmInfo.value.get.connection,
+    // publishMavenStyle := true,
+    // publishTo := Some("GitHub Package Registry" at "https://maven.pkg.github.com/leithaus/SNETPackages"),
+    // credentials += Credentials(Path.userHome / ".sbt" / "1.0" / ".githubcredentials"),
+    // Test/publishArtifact := false,
     licenses := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
     homepage := Some(url("https://www.f1r3fly.io")),
     libraryDependencies ++= commonDependencies,
