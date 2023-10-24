@@ -1,6 +1,7 @@
 package io.f1r3fly.rhohdc.tinyrho
 
-import breeze.linalg.{DenseVector, SparseVector}
+//import breeze.linalg.{DenseVector, SparseVector}
+import hv.*
 import scala.collection.mutable.HashMap
 
 //import HVAlgebra._
@@ -419,8 +420,8 @@ trait HVSymbolTableT[V[_],Q] extends HVRT[V,Q] {
   }
 }
 
-trait HVSymbolTable extends HVSymbolTableT[SparseVector,Boolean] 
+trait HVSymbolTable extends HVSymbolTableT[HVWrapperT,Boolean] 
 
 object HDCSymbolTable extends HVSymbolTable with HVAlgebraT {
-  override val symbolMap: HashMap[RTerm, SparseVector[Boolean]] = new HashMap[RTerm, SparseVector[Boolean]]()
+  override val symbolMap: HashMap[RTerm, HVWrapperT[Boolean]] = new HashMap[RTerm, HVWrapperT[Boolean]]()
 }

@@ -2,11 +2,15 @@ import Dependencies._
 
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "3.2.1"
+ThisBuild / scalaVersion := "3.2.1-RC1-bin-20220904-b5fea82-NIGHTLY"
+//ThisBuild / scalaVersion := "3.2.1"
 
 lazy val commonDependencies = Seq(
-  breeze,
-  breeze_viz
+  //breeze,
+  //breeze_viz
+  macroloopCore,
+  macroloopCollection,
+  hyperVector_3
 )
 
 lazy val hdc = (project in file("hdc"))

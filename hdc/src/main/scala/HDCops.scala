@@ -1,8 +1,9 @@
 package io.f1r3fly.rhohdc.tinyrho
 
-import breeze.linalg.{DenseVector, SparseVector}
-import breeze.stats.distributions._
-import breeze.stats.distributions.Rand.FixedSeed.randBasis
+//import breeze.linalg.{DenseVector, SparseVector}
+import hv.*
+//import breeze.stats.distributions._
+//import breeze.stats.distributions.Rand.FixedSeed.randBasis
 
 trait HVRT [V[_],Q] {
   def rand(): V[Q]
@@ -15,21 +16,46 @@ trait HVT[V[_],Q] extends HVRT[V,Q] {
   def maj(summands: List[V[Q]]): V[Q]
 }
 
-trait HVAlgebraT extends HVT[SparseVector,Boolean] {
-  val defaultDimension : Int = 4072
-  val Bernie = Bernoulli.distribution(0.5)
-  val Uni = Uniform(0,defaultDimension-1)
-  
-  override def zero() : SparseVector[Boolean] = SparseVector.zeros[Boolean]( defaultDimension )
-  override def rand(): SparseVector[Boolean]  = {
-    val size = Uni.sample().toInt
-    val vVals = Bernie.samples.take(size)
-    SparseVector[Boolean](vVals.toArray)
+trait HVWrapperT[Q] {
+  def hv : HyperVector
+  def permDecode : Permutation
+  def permEncode( p : Permutation ) : HVWrapperT[Q]
+}
+
+case class HVWrapper[Q]( hv : HyperVector ) extends HVWrapperT[Q] {
+  override def permDecode : Permutation = ???
+  override def permEncode( p : Permutation ) = ???
+}
+
+trait HVAlgebraT extends HVT[HVWrapperT,Boolean] {
+  override def zero() : HVWrapperT[Boolean] = HVWrapper[Boolean]( HyperVector.zero )
+  override def rand(): HVWrapperT[Boolean]  = HVWrapper[Boolean]( HyperVector.random )
+  override def xOr(v1: HVWrapperT[Boolean], v2: HVWrapperT[Boolean]): HVWrapperT[Boolean]  = {
+    ( v1, v2 ) match {
+      case ( hvw1 : HVWrapper[Boolean], hvw2 : HVWrapper[Boolean] ) => {
+        HVWrapper[Boolean]( hvw1.hv xor hvw2.hv )
+      }
+      case _ => ???
+    }
   }
-  override def xOr(v1: SparseVector[Boolean], v2: SparseVector[Boolean]): SparseVector[Boolean]  = ??? //v1.:^^( v2 )
-  override def perm(v1: SparseVector[Boolean], v2: SparseVector[Boolean]): SparseVector[Boolean] = ??? //v2.permute(v1.toDenseVector)
-  override def maj(summands: List[SparseVector[Boolean]]): SparseVector[Boolean] =
-    ??? //summands.reduce((a, b) => a + b).mapValues(_ >= (vectors.size / 2))
+  override def perm(v1: HVWrapperT[Boolean], v2: HVWrapperT[Boolean]): HVWrapperT[Boolean] = {
+    ( v1, v2 ) match {
+      case ( hvw1 : HVWrapper[Boolean], hvw2 : HVWrapper[Boolean] ) => {
+        HVWrapper[Boolean]( hvw1.permDecode( hvw2.hv ) )
+      }
+      case _ => ???
+    }
+  }
+  override def maj(summands: List[HVWrapperT[Boolean]]): HVWrapperT[Boolean] = {
+    val hvMajSummands : List[HyperVector] = summands.map( _.hv )
+    //val hvArray : Array[HyperVector] = hvMajSummands.toArray
+    //val hvTup : Tuple = Tuple.fromArray(hvArray)
+    //HVWrapper[Boolean]( HyperVector.majority(hvTup) )
+    // val hvSummand1 = hvMajSummands(0)
+    // val hvSummand2 = hvMajSummands(1)
+    // val hvMajRslt = HyperVector.majority(hvSummand1,hvSummand2)
+    HVWrapper[Boolean]( HyperVector.random )
+  }
 }
 
 object HVAlgebra extends HVAlgebraT {}

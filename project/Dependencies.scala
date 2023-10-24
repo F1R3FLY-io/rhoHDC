@@ -14,9 +14,12 @@ object Dependencies {
   // val enumeratumVersion = "1.5.13"
   // val slf4jVersion      = "1.7.30"
   // val kamonVersion      = "1.1.6"
-  val scalaUUIDVersion  = "0.3.1"
-  val breezeVersion     = "2.1.0"
-  val breeze_vizVersion = "2.1.0"
+  val scalaUUIDVersion           = "0.3.1"
+  val breezeVersion              = "2.1.0"
+  val breeze_vizVersion          = "2.1.0"
+  val macroloopCoreVersion       = "0.17.2"
+  val macroloopCollectionVersion = "0.17.2"
+  val hyperVectorVersion         = "0.2.0"
 
   // format: off
   // val bouncyProvCastle    = "org.bouncycastle"            % "bcprov-jdk15on"            % "1.68"
@@ -106,6 +109,9 @@ object Dependencies {
   // The visualization library is distributed separately as well.
   // It depends on LGPL code
   val breeze_viz          = "org.scalanlp"                %% "breeze-viz"               % breeze_vizVersion
+  val macroloopCore       = "be.adamv" %% "macroloop-core" % macroloopCoreVersion
+  val macroloopCollection = "be.adamv" %% "macroloop-core" % macroloopCollectionVersion
+  val hyperVector_3       = "hypervector" %% "hypervector" % hyperVectorVersion
   // format: on
 
 //   val overrides = Seq(

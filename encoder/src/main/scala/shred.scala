@@ -1,6 +1,7 @@
 package io.f1r3fly.rhohdc.tinyrho
 
-import breeze.linalg.{DenseVector, SparseVector}
+//import breeze.linalg.{DenseVector, SparseVector}
+import hv.*
 import scala.collection.mutable.HashMap
 
 trait ShredPath[L] { def add(l: L): ShredPath[L] }
@@ -11,13 +12,13 @@ case class FQN[L](path: List[L]) extends ShredPath[L] {
     FQN[L](path ++ List[L](l))
 }
 
-object VFQN extends FQN[SparseVector[Boolean]](List[SparseVector[Boolean]]())
+object VFQN extends FQN[HVWrapperT[Boolean]](List[HVWrapperT[Boolean]]())
 
 trait ShredValue
 
 case class TermValue( rTerm : RTerm ) extends ShredValue
 case class NameValue( rName : Name[RGrnd, RTerm] ) extends ShredValue
-case class HVValue( hv : SparseVector[Boolean] ) extends ShredValue
+case class HVValue( hv : HVWrapperT[Boolean] ) extends ShredValue
 case class HVTValue( hv : HVExpr[Boolean] ) extends ShredValue
 
 trait Shredder {

@@ -1,6 +1,7 @@
 package io.f1r3fly.rhohdc.tinyrho
 
-import breeze.linalg.{DenseVector, SparseVector}
+//import breeze.linalg.{DenseVector, SparseVector}
+import hv.*
 import scala.collection.immutable.HashMap
 
 trait RGrnd
@@ -15,7 +16,7 @@ trait RTerm extends Term[RGrnd, Name[RGrnd, RTerm]]
 case object RZ                            extends RTerm with RGrnd
 trait RFMonoidExpr                        extends RTerm with RGrnd
 case class RString(s: String)             extends RFMonoidExpr
-case class RHyperVector(v: SparseVector[Boolean])  extends RFMonoidExpr
+case class RHyperVector(v: HyperVector)  extends RFMonoidExpr
 case class RList(l: List[RTerm])          extends RFMonoidExpr
 case class RMap(l: HashMap[RTerm, RTerm]) extends RFMonoidExpr
 
