@@ -31,7 +31,7 @@ case object RHV1                                 extends RHVTerm
 case object RHVRand                              extends RHVTerm
 case class RHVXor(l: RHVTerm, r: RHVTerm)        extends RHVTerm
 case class RHVPerm(perm: RHVTerm, hvec: RHVTerm) extends RHVTerm
-case class RHVMaj(summands: List[RHVTerm])       extends RHVTerm
+case class RHVMaj(summands: Array[RHVTerm])       extends RHVTerm
 
 // Core rho calculus
 // Comprehension: for( param <- chan )cont

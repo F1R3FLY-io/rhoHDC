@@ -2,6 +2,7 @@ package io.f1r3fly.rhohdc.tinyrho
 
 //import breeze.linalg.{DenseVector, SparseVector}
 import hv.*
+//import conversion.OpaqueArg
 import scala.collection.mutable.HashMap
 
 trait ShredPath[L] { def add(l: L): ShredPath[L] }
@@ -28,17 +29,17 @@ trait Shredder {
       fqn: FQN[ShredValue],
       acc: HashMap[FQN[ShredValue], ShredValue]
   ): HashMap[FQN[ShredValue], ShredValue] =
-    acc + (fqn -> NameValue( chan ))
+    { acc += (fqn -> NameValue( chan )); acc }
   def shred(term: RTerm, fqn: FQN[ShredValue], acc: HashMap[FQN[ShredValue], ShredValue]): HashMap[FQN[ShredValue], ShredValue] = {
     val nPath = fqn ++ getLabel(term)
     acc.get( fqn ) match {
       case Some( _ ) => acc
       case None => {
         term match {
-          case RZ      => acc + (fqn -> getLabel(RZ))
-          case RHV0    => acc + (fqn -> getLabel(RHV0))
-          case RHV1    => acc + (fqn -> getLabel(RHV1))
-          case RHVRand => acc + (fqn -> getLabel(RHVRand))
+          case RZ      => { acc += (fqn -> getLabel(RZ)); acc }
+          case RHV0    => { acc += (fqn -> getLabel(RHV0)); acc }
+          case RHV1    => { acc += (fqn -> getLabel(RHV1)); acc }
+          case RHVRand => { acc += (fqn -> getLabel(RHVRand)); acc }
           case RF(c, v, k) => {
             shred(
               c,
@@ -105,8 +106,8 @@ trait Shredder {
               )
             )
           }
-          case RHVMaj(summands: List[RHVTerm]) => {
-            summands.zipWithIndex.foldLeft(acc)(
+          case RHVMaj(summands: Array[RHVTerm]) => {
+            summands.toList.zipWithIndex.foldLeft(acc)(
               { (facc, eIdx) =>
                 {
                   val (e, i) = eIdx

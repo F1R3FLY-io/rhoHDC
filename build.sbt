@@ -1,4 +1,5 @@
 import Dependencies._
+//import CompilerSettings._
 
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
@@ -21,7 +22,8 @@ lazy val hdc = (project in file("hdc"))
     scalacOptions ++= Seq(
       "-language:existentials",
       "-language:higherKinds",
-      "-Xfatal-warnings"
+      "-Xfatal-warnings",
+      "-deprecation"
     ),
     /* Publishing Settings */
     // scmInfo := Some(
@@ -46,7 +48,8 @@ lazy val tinyrho = (project in file("tinyrho"))
     scalacOptions ++= Seq(
       "-language:existentials",
       "-language:higherKinds",
-      "-Xfatal-warnings"
+      "-Xfatal-warnings",
+      "-deprecation"
     ),
     /* Publishing Settings */
     // scmInfo := Some(
@@ -71,7 +74,8 @@ lazy val encoder = (project in file("encoder"))
     scalacOptions ++= Seq(
       "-language:existentials",
       "-language:higherKinds",
-      "-Xfatal-warnings"
+      "-Xfatal-warnings",
+      "-deprecation"
     ),
     /* Publishing Settings */
     // scmInfo := Some(
@@ -93,5 +97,11 @@ lazy val encoder = (project in file("encoder"))
 lazy val root = (project in file("."))
   .settings(
     name := "rhoHDC",
-    libraryDependencies ++= commonDependencies
+    libraryDependencies ++= commonDependencies,
+    scalacOptions ++= Seq(
+      "-language:existentials",
+      "-language:higherKinds",
+      "-Xfatal-warnings",
+      "-deprecation"
+    )
   ).aggregate( hdc, tinyrho, encoder )

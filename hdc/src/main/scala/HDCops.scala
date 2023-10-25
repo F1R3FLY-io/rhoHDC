@@ -13,7 +13,7 @@ trait HVT[V[_],Q] extends HVRT[V,Q] {
   def zero() : V[Q]  
   def xOr(v1: V[Q], v2: V[Q]): V[Q]
   def perm(v1: V[Q], v2: V[Q]): V[Q]
-  def maj(summands: List[V[Q]]): V[Q]
+  def maj(summands: Array[V[Q]]): V[Q]
 }
 
 trait HVWrapperT[Q] {
@@ -46,8 +46,8 @@ trait HVAlgebraT extends HVT[HVWrapperT,Boolean] {
       case _ => ???
     }
   }
-  override def maj(summands: List[HVWrapperT[Boolean]]): HVWrapperT[Boolean] = {
-    val hvMajSummands : List[HyperVector] = summands.map( _.hv )
+  override def maj(summands: Array[HVWrapperT[Boolean]]): HVWrapperT[Boolean] = {
+    val hvMajSummands : Array[HyperVector] = summands.map( _.hv )
     //val hvArray : Array[HyperVector] = hvMajSummands.toArray
     //val hvTup : Tuple = Tuple.fromArray(hvArray)
     //HVWrapper[Boolean]( HyperVector.majority(hvTup) )
@@ -65,7 +65,7 @@ case class HVXor[V](l: HVExpr[V], r: HVExpr[V])
     extends HVExpr[V]
 case class HVPerm[V](perm: HVExpr[V], hvec: HVExpr[V])
     extends HVExpr[V]
-case class HVMaj[V](summands: List[HVExpr[V]])
+case class HVMaj[V](summands: Array[HVExpr[V]])
     extends HVExpr[V]
 
 trait HVTermAlgebraT extends HVT[HVExpr,Boolean] {
@@ -82,7 +82,7 @@ trait HVTermAlgebraT extends HVT[HVExpr,Boolean] {
     v1: HVExpr[Boolean],
     v2: HVExpr[Boolean]
   ): HVExpr[Boolean] = HVPerm[Boolean]( v1, v2 )
-  def maj(summands: List[HVExpr[Boolean]]): HVExpr[Boolean] = {
+  def maj(summands: Array[HVExpr[Boolean]]): HVExpr[Boolean] = {
     HVMaj[Boolean]( summands )
   }
 }

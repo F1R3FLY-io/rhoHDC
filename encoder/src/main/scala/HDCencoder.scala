@@ -30,7 +30,7 @@ trait GHVEncoder[V[_],Q] extends HVEncoder[V,Q] with HVT[V,Q] with HVSymbolTable
             perm(prm, getSymbol(name)),
             perm(prm, getSymbol(RString("term"))),
             encode(t, prm, acc)( salt ))
-        maj(List[V[Q]](xOr(rcrdTagV, tagV), xOr(termFldV, tV)))
+        maj(Array[V[Q]](xOr(rcrdTagV, tagV), xOr(termFldV, tV)))
       }
       case _ => ???
     }
@@ -47,7 +47,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
 
   def encode(vfqn: FQN[ShredValue], prm: HVWrapperT[Boolean])(salt: HVWrapperT[Boolean]): HVWrapperT[Boolean] =
     maj(
-      vfqn.path.map(
+      vfqn.path.toArray.map(
         {
           ( shredV ) => {
             shredV match {
@@ -60,13 +60,13 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
     )
   def encode(hmap: HashMap[FQN[ShredValue], ShredValue], prm: HVWrapperT[Boolean])(salt: HVWrapperT[Boolean]): HVWrapperT[Boolean] = {
     val encodedPairs =
-      hmap.foldLeft(List[HVWrapperT[Boolean]]())(
+      hmap.foldLeft(Array[HVWrapperT[Boolean]]())(
         { (acc, kvPair) =>
           {
             val (k, v) = kvPair
             v match {
               case TermValue( rTrm ) => {
-                acc ++ List[HVWrapperT[Boolean]](xOr(encode(k, prm)(salt), encode(rTrm, prm, zero())(salt)))
+                acc ++ Array[HVWrapperT[Boolean]](xOr(encode(k, prm)(salt), encode(rTrm, prm, zero())(salt)))
               }
               case _ => ???
             }            
@@ -85,7 +85,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(name)),
             perm(prm, getSymbol(RString("term"))),
             encode(t, prm, acc)( salt ))
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(termFldV, tV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(termFldV, tV)))
       }
       case _ => ???
     }
@@ -110,7 +110,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("k"))),
             encode(k, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(cFldV, cV), xOr(vFldV, vV), xOr(kFldV, kV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(cFldV, cV), xOr(vFldV, vV), xOr(kFldV, kV)))
       }
       case RS(c, msg) => {
         val (tagV, cFldV, cV, msgFldV, msgV) =
@@ -121,7 +121,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("msg"))),
             encode(msg, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(cFldV, cV), xOr(msgFldV, msgV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(cFldV, cV), xOr(msgFldV, msgV)))
       }
       case RP(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -132,7 +132,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RE(t) => {
         val (tagV, nFldV, nV) =
@@ -148,7 +148,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        xOr(tagV, maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV))))
+        xOr(tagV, maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV))))
       }
       case RHVPerm(permT, hvec) => {
         val (tagV, pFldV, pV, hvFldV, hvV) =
@@ -159,13 +159,13 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("hvec"))),
             encode(hvec, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(pFldV, pV), xOr(hvFldV, hvV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(pFldV, pV), xOr(hvFldV, hvV)))
       }
-      case RHVMaj(summands: List[RHVTerm]) => {
+      case RHVMaj(summands: Array[RHVTerm]) => {
         // BUGBUG: should acc be factored in differently?
         val tagV = perm(prm, getSymbol(term))
         val summandVecs : List[HVWrapperT[Boolean]] =
-          summands.zipWithIndex.foldLeft(List[HVWrapperT[Boolean]]())(
+          summands.toList.zipWithIndex.foldLeft(List[HVWrapperT[Boolean]]())(
             { (facc, eIdx) =>
               {
                 val (e, i) = eIdx
@@ -177,11 +177,11 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
                   }
                 val (tagV, idxV, eV) =
                   (perm(prm, getSymbol(term)), perm(prm, lblV), encode(e, prm, acc)( salt ))
-                facc ++ List[HVWrapperT[Boolean]](maj(List[HVWrapperT[Boolean]](tagV, xOr(idxV,eV))))
+                facc ++ List[HVWrapperT[Boolean]](maj(Array[HVWrapperT[Boolean]](tagV, xOr(idxV,eV))))
               }
             }
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV)) ++ summandVecs)
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV)) ++ summandVecs)
       }
       case RMult(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -192,7 +192,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RDiv(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -203,7 +203,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RAdd(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -214,7 +214,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RMinus(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -225,12 +225,12 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RNeg(elem) => {
         val (tagV, elemFldV, elemV) =
           (perm(prm, getSymbol(term)), perm(prm, getSymbol(RString("neg"))), encode(elem, prm, acc)( salt ))
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(elemFldV, elemV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(elemFldV, elemV)))
       }
       case REq(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -241,7 +241,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RLEq(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -252,7 +252,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RGEq(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -263,7 +263,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RLt(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -274,7 +274,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RGt(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -285,7 +285,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RAppend(l, r) => {
         val (tagV, lFldV, lV, rFldV, rV) =
@@ -296,7 +296,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             perm(prm, getSymbol(RString("right"))),
             encode(r, prm, acc)( salt )
           )
-        maj(List[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
+        maj(Array[HVWrapperT[Boolean]](xOr(rcrdTagV, tagV), xOr(lFldV, lV), xOr(rFldV, rV)))
       }
       case RIf(test, tbranch, fbranch) => {
         val (tagV, testFldV, testV, tbranchFldV, tbranchV, fbranchFldV, fbranchV) =
@@ -310,7 +310,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
             encode(fbranch, prm, acc)( salt )
           )
         maj(
-          List[HVWrapperT[Boolean]](
+          Array[HVWrapperT[Boolean]](
             xOr(rcrdTagV, tagV),
             xOr(testFldV, testV),
             xOr(tbranchFldV, tbranchV),
