@@ -6,6 +6,24 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := "3.2.1-RC1-bin-20220904-b5fea82-NIGHTLY"
 //ThisBuild / scalaVersion := "3.2.1"
 
+ThisBuild / publishMavenStyle := true
+//ThisBuild / publish / skip := true
+ThisBuild / publishTo := Some(
+  "GitHub Package Registry " at "https://maven.pkg.github.com/F1R3FLY-io/rhoHDC"
+)
+ThisBuild / credentials += Credentials(
+  "GitHub Package Registry", // realm
+  "maven.pkg.github.com", // host
+  "leithaus", // user
+              //sys.env.getOrElse("GITHUB_TOKEN", "abc123")
+  "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" // password
+)
+
+//resolvers += Resolver.sonatypeOssRepos("snapshots")
+//resolvers += Resolver.mavenRepo("GitHub Packages" at "https://maven.pkg.github.com/Owner/Repository")
+resolvers += "GitHub Packages" at "https://maven.pkg.github.com/F1R3FLY-io/rhoHDC"
+
+
 lazy val commonDependencies = Seq(
   //breeze,
   //breeze_viz

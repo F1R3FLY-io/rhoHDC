@@ -1,9 +1,8 @@
 package io.f1r3fly.rhohdc.tinyrho
 
-//import breeze.linalg.{DenseVector, SparseVector}
 import hv.*
-//import breeze.stats.distributions._
-//import breeze.stats.distributions.Rand.FixedSeed.randBasis
+
+// A very simple minded polymorphic trampoline for concrete versus syntactic representation
 
 trait HVRT [V[_],Q] {
   def rand(): V[Q]
@@ -60,30 +59,79 @@ trait HVAlgebraT extends HVT[HVWrapperT,Boolean] {
 
 object HVAlgebra extends HVAlgebraT {}
 
-trait HVExpr[V]
-case class HVXor[V](l: HVExpr[V], r: HVExpr[V])
-    extends HVExpr[V]
-case class HVPerm[V](perm: HVExpr[V], hvec: HVExpr[V])
-    extends HVExpr[V]
-case class HVMaj[V](summands: Array[HVExpr[V]])
-    extends HVExpr[V]
+trait HVExpr[Q] {
+  def toHyperVector() : HyperVector
+}
+case class HVConst[Q]( vconst: HVWrapper[Q] ) extends HVExpr[Q] {
+  override def toHyperVector() : HyperVector = {
+    vconst.hv
+  }
+}
+case class HVXor[Q](l: HVExpr[Q], r: HVExpr[Q])
+    extends HVExpr[Q] {
+  override def toHyperVector() : HyperVector = {
+    l.toHyperVector() xor r.toHyperVector()
+  }
+}
+case class HVPerm[Q](permEnc: HVExpr[Q], hvec: HVExpr[Q])
+    extends HVExpr[Q] {
+  override def toHyperVector() : HyperVector = {
+    HVWrapper( permEnc.toHyperVector() ).permDecode( hvec.toHyperVector() )
+  }
+}
+case class HVMaj[Q](summands: Array[HVExpr[Q]])
+    extends HVExpr[Q] {
+  override def toHyperVector() : HyperVector = {
+    HVAlgebra.maj( summands.map( { (s) => { HVWrapper( s.toHyperVector() ) } } ) ).hv
+  }
+}
 
-trait HVTermAlgebraT extends HVT[HVExpr,Boolean] {
-  case object HV0 extends HVExpr[Boolean]
-  case object HV1 extends HVExpr[Boolean]
-  case object HVRand extends HVExpr[Boolean]
-  def zero() : HVExpr[Boolean] = HV0
-  def rand(): HVExpr[Boolean] = HV1
+trait HVExprWrapperT[Q] extends HVExpr[Q] with HVWrapperT[Q] {
+  def hvExpr : HVExpr[Q]
+  override def hv = hvExpr.toHyperVector()
+  override def toHyperVector() = hvExpr.toHyperVector()
+  override def permDecode : Permutation = ???
+  override def permEncode( p : Permutation ) = ???
+}
+
+case class HVExprWrapper[Q]( hvExpr : HVExpr[Q] ) extends HVExprWrapperT[Q] 
+
+case object HVZeroBool extends HVExpr[Boolean] {
+  override def toHyperVector() = HyperVector.zero
+}
+case object HVOneBool extends HVExpr[Boolean] {
+  override def toHyperVector() = HyperVector.one
+}
+case object HVRandBool extends HVExpr[Boolean] {
+  override def toHyperVector() = HyperVector.random
+}
+
+case object HV0 extends HVExprWrapperT[Boolean] {
+  override def hvExpr = HVZeroBool
+  override def toHyperVector() = { HyperVector.zero }
+}
+case object HV1 extends HVExprWrapperT[Boolean] {
+  override def hvExpr = HVOneBool
+  override def toHyperVector() = { HyperVector.one }
+}
+case object HVR extends HVExprWrapperT[Boolean] {
+  override def hvExpr = HVRandBool
+  override def toHyperVector() = { HyperVector.random }
+}
+
+trait HVTermAlgebraT extends HVT[HVExprWrapperT,Boolean] {  
+  def zero() : HVExprWrapperT[Boolean] = HV0
+  def rand(): HVExprWrapperT[Boolean] = HV1
   def xOr(
-    v1: HVExpr[Boolean],
-    v2: HVExpr[Boolean]
-  ): HVExpr[Boolean] = HVXor[Boolean]( v1, v2 )
+    v1: HVExprWrapperT[Boolean],
+    v2: HVExprWrapperT[Boolean]
+  ): HVExprWrapperT[Boolean] = HVExprWrapper[Boolean]( HVXor[Boolean]( v1.hvExpr, v2.hvExpr ) )
   def perm(
-    v1: HVExpr[Boolean],
-    v2: HVExpr[Boolean]
-  ): HVExpr[Boolean] = HVPerm[Boolean]( v1, v2 )
-  def maj(summands: Array[HVExpr[Boolean]]): HVExpr[Boolean] = {
-    HVMaj[Boolean]( summands )
+    v1: HVExprWrapperT[Boolean],
+    v2: HVExprWrapperT[Boolean]
+  ): HVExprWrapperT[Boolean] = HVExprWrapper( HVPerm[Boolean]( v1.hvExpr, v2.hvExpr ) )
+  def maj(summands: Array[HVExprWrapperT[Boolean]]): HVExprWrapperT[Boolean] = {
+    HVExprWrapper[Boolean]( HVMaj[Boolean]( summands.map(_.hvExpr) ) )
   }
 }
 
