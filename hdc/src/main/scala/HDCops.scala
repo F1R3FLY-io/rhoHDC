@@ -1,8 +1,11 @@
 package io.f1r3fly.rhohdc.tinyrho
 
 import hv.*
+import be.adamv.macroloop.collection.*
+import scala.compiletime.ops.int.{%, /}
 
 // A very simple minded polymorphic trampoline for concrete versus syntactic representation
+// Extremely disappointed with this implementation. Should rewrite soon.
 
 trait HVRT [V[_],Q] {
   def rand(): V[Q]
@@ -22,8 +25,25 @@ trait HVWrapperT[Q] {
 }
 
 case class HVWrapper[Q]( hv : HyperVector ) extends HVWrapperT[Q] {
-  override def permDecode : Permutation = ???
-  override def permEncode( p : Permutation ) = ???
+  override def permDecode : Permutation = {
+    val perm =
+      LehmerCodeVariant.lehmerCodeToPermutation(
+        LehmerCodeVariant.bitVectorToLehmerCode( hv )
+      )
+    //val sv : SizedVector[HyperVectorSize, Int] = SizedVector.wrap( perm )
+
+    //Permutation.fromRaw( sv )
+    perm
+  }
+  override def permEncode( p : Permutation ) : HVWrapperT[Q] = {
+    val bitV = 
+      LehmerCodeVariant.lehmerCodeToBitVector(
+        LehmerCodeVariant.permutationToLehmerCode( p )
+      )
+    val sv : SizedVector[HyperVectorSize / 32, Int] = SizedVector.wrap( bitV.raw.data )
+
+    HVWrapper( HyperVector.fromRaw( sv ) )
+  }
 }
 
 trait HVAlgebraT extends HVT[HVWrapperT,Boolean] {

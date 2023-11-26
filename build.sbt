@@ -21,12 +21,14 @@ ThisBuild / credentials += Credentials(
 
 //resolvers += Resolver.sonatypeOssRepos("snapshots")
 //resolvers += Resolver.mavenRepo("GitHub Packages" at "https://maven.pkg.github.com/Owner/Repository")
-resolvers += "GitHub Packages" at "https://maven.pkg.github.com/F1R3FLY-io/rhoHDC"
+//resolvers += "GitHub Packages" at "https://maven.pkg.github.com/F1R3FLY-io/rhoHDC"
+//resolvers += "GitHub Packages" at "https://maven.pkg.github.com/F1R3FLY-io/HyperVector"
+resolvers += "GitHub Packages" at "https://maven.pkg.github.com/F1R3FLY-io"
+//resolvers += "Local Maven Repository" at "file://" + Path.userHome.absolutePath + "/.m2/repository"
+resolvers += "Local Maven Repository" at "file://" + Path.userHome.absolutePath + "/.ivy2/local"
 
 
 lazy val commonDependencies = Seq(
-  //breeze,
-  //breeze_viz
   macroloopCore,
   macroloopCollection,
   hyperVector_3

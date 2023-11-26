@@ -19,7 +19,7 @@ object Dependencies {
   val breeze_vizVersion          = "2.1.0"
   val macroloopCoreVersion       = "0.17.2"
   val macroloopCollectionVersion = "0.17.2"
-  val hyperVectorVersion         = "0.2.0"
+  val hyperVectorVersion         = "0.2.0.1"
 
   // format: off
   // val bouncyProvCastle    = "org.bouncycastle"            % "bcprov-jdk15on"            % "1.68"

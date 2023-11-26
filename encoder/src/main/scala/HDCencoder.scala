@@ -20,16 +20,16 @@ trait HVEncoder[V[_],Q] extends HVT[V,Q] {
 }
 
 trait GHVEncoder[V[_],Q] extends HVEncoder[V,Q] with HVT[V,Q] with HVSymbolTableT[V,Q] {
-  override def encode(name: Name[RGrnd, RTerm], prm: V[Q], acc: V[Q])(
+  override def encode(name: Name[RGrnd, RTerm], oprm: V[Q], acc: V[Q])(
       salt: V[Q]
   ): V[Q] = {    
     name match {
       case RQ( t ) => {
         val (rcrdTagV, tagV, termFldV, tV) =
           (getSymbol(RString("RTerm")),
-            perm(prm, getSymbol(name)),
-            perm(prm, getSymbol(RString("term"))),
-            encode(t, prm, acc)( salt ))
+            perm(oprm, getSymbol(name)),
+            perm(oprm, getSymbol(RString("term"))),
+            encode(t, oprm, acc)( salt ))
         maj(Array[V[Q]](xOr(rcrdTagV, tagV), xOr(termFldV, tV)))
       }
       case _ => ???
