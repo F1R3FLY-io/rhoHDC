@@ -3,8 +3,8 @@ import Dependencies._
 
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "3.2.1-RC1-bin-20220904-b5fea82-NIGHTLY"
-//ThisBuild / scalaVersion := "3.2.1"
+//ThisBuild / scalaVersion := "3.2.1-RC1-bin-20220904-b5fea82-NIGHTLY"
+ThisBuild / scalaVersion := "3.3.1"
 
 ThisBuild / publishMavenStyle := true
 //ThisBuild / publish / skip := true
