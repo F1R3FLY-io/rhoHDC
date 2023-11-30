@@ -26,11 +26,13 @@ ThisBuild / credentials += Credentials(
 resolvers += "GitHub Packages" at "https://maven.pkg.github.com/F1R3FLY-io"
 //resolvers += "Local Maven Repository" at "file://" + Path.userHome.absolutePath + "/.m2/repository"
 resolvers += "Local Maven Repository" at "file://" + Path.userHome.absolutePath + "/.ivy2/local"
-resolvers += Resolver.sonatypeRepo("releases")
+//resolvers += Resolver.sonatypeRepo("releases")
+resolvers ++= Resolver.sonatypeOssRepos("releases")
 
 
 lazy val commonDependencies = Seq(
   scalaLogging,
+  json4sNative,
   macroloopCore,
   macroloopCollection,
   hyperVector_3  
