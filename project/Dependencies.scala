@@ -112,6 +112,7 @@ object Dependencies {
   val macroloopCore       = "be.adamv" %% "macroloop-core" % macroloopCoreVersion
   val macroloopCollection = "be.adamv" %% "macroloop-core" % macroloopCollectionVersion
   val hyperVector_3       = "hypervector" %% "hypervector" % hyperVectorVersion
+  val scalaLogging        = "com.typesafe.scala-logging" %% "scala-logging"             % "3.9.4"
   // format: on
 
 //   val overrides = Seq(

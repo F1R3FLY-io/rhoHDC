@@ -68,7 +68,13 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
               case TermValue( rTrm ) => {
                 acc ++ Array[HVWrapperT[Boolean]](xOr(encode(k, prm)(salt), encode(rTrm, prm, zero())(salt)))
               }
-              case _ => ???
+              case NameValue( rNm ) => {
+                acc ++ Array[HVWrapperT[Boolean]](xOr(encode(k, prm)(salt), encode(rNm, prm, zero())(salt)))
+              }
+              case HVValue(hvWrap) => {
+                val rcrdTagV = getSymbol(RString("RConst"))
+                acc ++ Array[HVWrapperT[Boolean]](xOr(encode(k, prm)(salt), xOr(rcrdTagV,hvWrap)))
+              }
             }            
           }
         }

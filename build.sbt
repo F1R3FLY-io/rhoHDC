@@ -26,13 +26,41 @@ ThisBuild / credentials += Credentials(
 resolvers += "GitHub Packages" at "https://maven.pkg.github.com/F1R3FLY-io"
 //resolvers += "Local Maven Repository" at "file://" + Path.userHome.absolutePath + "/.m2/repository"
 resolvers += "Local Maven Repository" at "file://" + Path.userHome.absolutePath + "/.ivy2/local"
+resolvers += Resolver.sonatypeRepo("releases")
 
 
 lazy val commonDependencies = Seq(
+  scalaLogging,
   macroloopCore,
   macroloopCollection,
-  hyperVector_3
+  hyperVector_3  
 )
+
+lazy val util = (project in file("util"))
+//  .settings(commonSettings: _*)
+//  .settings(bnfcSettings: _*)
+  .settings(
+    name := "util",
+    scalacOptions ++= Seq(
+      "-language:existentials",
+      "-language:higherKinds",
+      "-Xfatal-warnings",
+      "-deprecation"
+    ),
+    /* Publishing Settings */
+    // scmInfo := Some(
+    //   ScmInfo(url("https://github.com/F1R3FLY-io/rhoHDC"), "git@github.com:F1R3FLY-io/rhoHDC.git")
+    // ),
+    // //git.remoteRepo := scmInfo.value.get.connection,
+    // publishMavenStyle := true,
+    // publishTo := Some("GitHub Package Registry" at "https://maven.pkg.github.com/leithaus/SNETPackages"),
+    // credentials += Credentials(Path.userHome / ".sbt" / "1.0" / ".githubcredentials"),
+    // Test/publishArtifact := false,
+    licenses := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
+    homepage := Some(url("https://www.f1r3fly.io")),
+    libraryDependencies ++= commonDependencies,
+    Test/javaOptions ++= Seq("-Xss240k", "-XX:MaxJavaStackTraceDepth=10000", "-Xmx128m")
+  )
 
 lazy val hdc = (project in file("hdc"))
 //  .settings(commonSettings: _*)
@@ -58,7 +86,7 @@ lazy val hdc = (project in file("hdc"))
     homepage := Some(url("https://www.f1r3fly.io")),
     libraryDependencies ++= commonDependencies,
     Test/javaOptions ++= Seq("-Xss240k", "-XX:MaxJavaStackTraceDepth=10000", "-Xmx128m")
-  )
+  ).dependsOn( util )
 
 lazy val tinyrho = (project in file("tinyrho"))
 //  .settings(commonSettings: _*)
@@ -84,7 +112,7 @@ lazy val tinyrho = (project in file("tinyrho"))
     homepage := Some(url("https://www.f1r3fly.io")),
     libraryDependencies ++= commonDependencies,
     Test/javaOptions ++= Seq("-Xss240k", "-XX:MaxJavaStackTraceDepth=10000", "-Xmx128m")
-  )
+  ).dependsOn( util )
 
 lazy val encoder = (project in file("encoder"))
 //  .settings(commonSettings: _*)
@@ -110,7 +138,7 @@ lazy val encoder = (project in file("encoder"))
     homepage := Some(url("https://www.f1r3fly.io")),
     libraryDependencies ++= commonDependencies,
     Test/javaOptions ++= Seq("-Xss240k", "-XX:MaxJavaStackTraceDepth=10000", "-Xmx128m")
-  )
+  ).dependsOn( util )
   .aggregate( hdc, tinyrho )
   .dependsOn( hdc, tinyrho )
 
@@ -124,4 +152,5 @@ lazy val root = (project in file("."))
       "-Xfatal-warnings",
       "-deprecation"
     )
-  ).aggregate( hdc, tinyrho, encoder )
+  ).aggregate( hdc, tinyrho, encoder, util )
+  .dependsOn( hdc, tinyrho, encoder, util )
