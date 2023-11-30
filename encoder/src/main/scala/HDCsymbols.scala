@@ -425,3 +425,9 @@ trait HVSymbolTable extends HVSymbolTableT[HVWrapperT,Boolean]
 object HDCSymbolTable extends HVSymbolTable with HVAlgebraT {
   override val symbolMap: HashMap[RTerm, HVWrapperT[Boolean]] = new HashMap[RTerm, HVWrapperT[Boolean]]()
 }
+
+trait HVExprSymbolTable extends HVSymbolTableT[HVExprWrapperT,Boolean] 
+
+object HDCExprSymbolTable extends HVExprSymbolTable with HVTermAlgebraT {
+  override val symbolMap: HashMap[RTerm, HVExprWrapperT[Boolean]] = new HashMap[RTerm, HVExprWrapperT[Boolean]]()
+}

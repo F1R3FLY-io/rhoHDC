@@ -20,6 +20,7 @@ trait ShredValue
 case class TermValue( rTerm : RTerm ) extends ShredValue
 case class NameValue( rName : Name[RGrnd, RTerm] ) extends ShredValue
 case class HVValue( hv : HVWrapperT[Boolean] ) extends ShredValue
+case class HVExprValue( hv : HVExprWrapperT[Boolean] ) extends ShredValue
 case class HVTValue( hv : HVExpr[Boolean] ) extends ShredValue
 
 trait Shredder {
