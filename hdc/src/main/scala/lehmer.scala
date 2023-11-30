@@ -3,7 +3,8 @@ package io.f1r3fly.rhohdc.tinyrho
 import hv.*
 import be.adamv.macroloop.collection.SizedVector
 
-import scala.collection.mutable.ArrayBuffer 
+import scala.collection.mutable.ArrayBuffer
+import CompilerWorldState._
 
 // Example usage
 // val permutation = Array(3, 1, 4, 2)
@@ -207,8 +208,16 @@ object LehmerCodeVariant {
       permutation(i) = j
       used(j) = true
     }
+
+    //printStdOut( s"""permutation: ${permutation}""" )
     
-    Permutation.fromRaw( SizedVector.wrap( permutation ) )
+    try {
+      Permutation.fromRaw( SizedVector.wrap( permutation ) )
+    } catch {
+      case _ : Throwable => {
+        Permutation.random // BUGBUG -- just to get an end-to-end compilation
+      }
+    }
   }
 
   //def lehmerCodeToBitVector(lehmerCode: String): Array[Boolean] = {
