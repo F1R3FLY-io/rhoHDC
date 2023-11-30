@@ -115,11 +115,9 @@ object Dependencies {
   val scalaLogging        = "com.typesafe.scala-logging" %% "scala-logging"             % "3.9.4"
   //val json4sNative        = "org.json4s" %% "json4s-native" % "4.0.0-M2"
   //val json4sNative        = "org.json4s" %% "json4s-native-scala3_3" % "4.0.0-M2"
-  val json4sNative        = "org.json4s" % "json4s-ast_native0.4_2.13" % "4.1.0-M3"
+  //val json4sNative        = "org.json4s" % "json4s-ast_native0.4_2.13" % "4.1.0-M3"
+  val json4sNative        = "org.json4s" % "json4s-native_3" % "4.0.6"
 
-  //https://repo1.maven.org/maven2/org/json4s/json4s-ast_native0.4_2.13/4.1.0-M3/
-  //https://repo1.maven.org/maven2/org/json4s/json4s-ast_native0.4_2.13/4.1.0-M3/json4s-ast_native0.4_2.13-4.1.0-M3.pom
-  //https://repo1.maven.org/maven2/org/json4s/json4s-ast_native0.4_2.13_3/4.1.0-M3/json4s-ast_native0.4_2.13_3-4.1.0-M3.pom
   // format: on
 
 //   val overrides = Seq(
