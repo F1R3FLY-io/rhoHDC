@@ -47,6 +47,7 @@ lazy val util = (project in file("util"))
       "-language:existentials",
       "-language:higherKinds",
       "-Xfatal-warnings",
+      "-explain",
       "-deprecation"
     ),
     /* Publishing Settings */
@@ -73,6 +74,7 @@ lazy val hdc = (project in file("hdc"))
       "-language:existentials",
       "-language:higherKinds",
       "-Xfatal-warnings",
+      "-explain",
       "-deprecation"
     ),
     /* Publishing Settings */
@@ -99,6 +101,7 @@ lazy val tinyrho = (project in file("tinyrho"))
       "-language:existentials",
       "-language:higherKinds",
       "-Xfatal-warnings",
+      "-explain",
       "-deprecation"
     ),
     /* Publishing Settings */
@@ -125,6 +128,7 @@ lazy val encoder = (project in file("encoder"))
       "-language:existentials",
       "-language:higherKinds",
       "-Xfatal-warnings",
+      "-explain",
       "-deprecation"
     ),
     /* Publishing Settings */
@@ -152,6 +156,7 @@ lazy val root = (project in file("."))
       "-language:existentials",
       "-language:higherKinds",
       "-Xfatal-warnings",
+      "-explain",
       "-deprecation"
     )
   ).aggregate( hdc, tinyrho, encoder, util )

@@ -6,7 +6,7 @@ import scala.collection.mutable.HashMap
 //import HVAlgebra._
 //import HDCSymbolTable._
 
-trait HVEncoder[V[_],Q] extends HVT[V,Q] {
+trait HVEncoder[V[_],Q,P] extends HVT[V,Q,P] {
   def encode(vfqn: FQN[ShredValue], prm: V[Q])(salt: V[Q]): V[Q]
   def encode(hmap: HashMap[FQN[ShredValue], ShredValue], prm: V[Q])(salt: V[Q]): V[Q]
   def encode(name: Name[RGrnd, RTerm], prm: V[Q], acc: V[Q])(salt: V[Q]): V[Q]
@@ -14,7 +14,7 @@ trait HVEncoder[V[_],Q] extends HVT[V,Q] {
   def encode(term: RTerm)(salt: V[Q]): V[Q]
 }
 
-trait GHVEncoder[V[_],Q] extends HVEncoder[V,Q] with HVT[V,Q] with HVSymbolTableT[V,Q] {
+trait GHVEncoder[V[_],Q,P] extends HVEncoder[V,Q,P] with HVT[V,Q,P] with HVSymbolTableT[V,Q] {
   override def encode(name: Name[RGrnd, RTerm], oprm: V[Q], acc: V[Q])(
       salt: V[Q]
   ): V[Q] = {    
@@ -32,7 +32,7 @@ trait GHVEncoder[V[_],Q] extends HVEncoder[V,Q] with HVT[V,Q] with HVSymbolTable
   }
 }
 
-object VEncoder extends HVEncoder[HVWrapperT,Boolean]
+object VEncoder extends HVEncoder[HVWrapperT,Boolean,Permutation]
     with Shredder with HVAlgebraT
 {
   import HDCSymbolTable._
@@ -332,7 +332,7 @@ object VEncoder extends HVEncoder[HVWrapperT,Boolean]
   }
 }
 
-object VExprEncoder extends HVEncoder[HVExprWrapperT,Boolean]
+object VExprEncoder extends HVEncoder[HVExprWrapperT,Boolean,HVPermWrapperT]
     with Shredder with HVTermAlgebraT
 {
   import HDCExprSymbolTable._
